@@ -1,0 +1,14 @@
+{% extends 'shop_port1/base.html' %}
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<h1>Checkout</h1>
+<p>Gesamtpreis: {{ total_price }} €</p>
+<form method="post">
+    {% csrf_token %}
+    <label>Zahlungsmethode:</label><br>
+    <input type="radio" name="payment_method" value="paypal"> PayPal<br>
+    <input type="radio" name="payment_method" value="bank_transfer"> Banküberweisung<br>
+    <button type="submit" class="btn btn-primary">Zahlung abschließen</button>
+</form>
+{% endblock %}

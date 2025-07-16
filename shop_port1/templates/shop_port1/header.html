@@ -1,0 +1,53 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'shop:index' %}">
+            <img src="{% static 'bfw.png' %}" alt="Logo" height="40" class="me-2">
+            <span>Le Metro</span>
+        </a>
+
+
+        <!-- Warenkorb-Icon mit AJAX-Update -->
+        <div class="d-flex order-lg-1">
+            <div class="dropdown">
+                <a href="{% url 'shop:cart' %}" class="btn btn-outline-dark position-relative dropdown-toggle" id="cartDropdown" data-bs-toggle="dropdown" aria-expanded="false"  data-bs-auto-close="false">
+                    <i class="bi bi-cart"></i>
+                    <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ cart_item_count }}
+                    </span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="cartDropdown" id="cart-preview" style="width: 350px; max-height: 400px; overflow-y: auto;">
+                    <li class="text-center"><em>Warenkorb wird geladen...</em></li>
+                </ul>
+            </div>
+
+
+            <!-- Hamburger-Menü -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Navigation umschalten">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'shop:about' %}">Über uns</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'shop:contact' %}">Kontakt</a>
+                </li>
+            </ul>
+
+            <!-- Suchfeld mit Lupen-Icon -->
+            <form class="d-flex me-3" action="{% url 'shop:search' %}" method="GET">
+                <input class="form-control me-2" type="search" name="query" placeholder="Suche" aria-label="Suche">
+                <button class="btn btn-outline-dark" type="submit">
+                    <i class="bi bi-search"></i> <!-- Lupen-Icon -->
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="container mt-4">
+
+

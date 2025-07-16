@@ -1,0 +1,41 @@
+{% extends 'shop_port1/base.html' %}
+{% block title %}Artikel aus {{ group.name }}{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Artikel aus der Gruppe: <span class="text-primary">{{ group.name }}</span></h1>
+
+    <div class="row">
+        {% for product in articles %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.designation }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <img src="{% static 'default-product.jpg' %}" class="card-img-top" alt="Kein Bild verfügbar" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="card-title">{{ product.designation }}</h5>
+                        <p class="card-text"><strong>{{ product.price }} €</strong></p>
+                        <p class="card-text">
+                            {% if product.inventory == 0 %}
+                                <span class="badge bg-danger">❌ Ausverkauft</span>
+                            {% elif product.inventory <= product.minmum_inventory %}
+                                <span class="badge bg-warning text-dark">⚠ Wenig Bestand ({{ product.inventory }} Stück)</span>
+                            {% else %}
+                                <span class="badge bg-success">✔ Auf Lager ({{ product.inventory }} Stück)</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <a href="{% url 'shop:product_detail' product.id %}" class="btn btn-outline-dark w-100 mt-3">Zum Produkt</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">Keine Artikel in dieser Gruppe.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

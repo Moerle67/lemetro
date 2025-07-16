@@ -1,0 +1,39 @@
+{% extends 'shop_port1/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">Suchergebnisse für "{{ query }}"</h2>
+
+    {% if results %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for product in results %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <img src="{% static 'default-product.jpg' %}" class="card-img-top" alt="Standardbild" style="height: 200px; object-fit: cover;">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.designation }}</h5>
+                            <p class="card-text"><strong>{{ product.price }} €</strong></p>
+
+                            {% if product.inventory == 0 %}
+                                <p class="text-danger mb-2"><i class="bi bi-x-circle-fill"></i> Ausverkauft</p>
+                            {% elif product.inventory <= product.minmum_inventory %}
+                                <p class="text-warning mb-2"><i class="bi bi-exclamation-triangle-fill"></i> Nur noch {{ product.inventory }} Stück verfügbar!</p>
+                            {% else %}
+                                <p class="text-success mb-2"><i class="bi bi-check-circle-fill"></i> Auf Lager ({{ product.inventory }} verfügbar)</p>
+                            {% endif %}
+
+                            <a href="{% url 'shop:product_detail' product.id %}" class="btn btn-outline-dark w-100">Zum Produkt</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">Keine Artikel gefunden.</p>
+    {% endif %}
+</div>
+{% endblock %}

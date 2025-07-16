@@ -1,0 +1,43 @@
+{% extends 'shop_port1/base.html' %}
+{% block title %}{{ category.name }} - Produkte{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center my-4">{{ category.name }}</h1>
+
+    <div class="row text-center mb-5">
+        {% for product in products %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <img src="{% static 'default-product.jpg' %}" class="card-img-top" alt="Standardbild" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text"><strong>{{ product.price }} €</strong></p>
+
+                    <!-- ✅ Verbesserte Darstellung für Menge & Buttons -->
+                    <form class="add-to-cart-form d-flex justify-content-center align-items-center gap-2" data-product-id="{{ product.id }}" action="{% url 'shop:add_to_cart' product.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <input type="number" name="quantity" value="1" min="1" class="form-control text-center" style="max-width: 60px;">
+                        <button type="submit" class="btn btn-dark">
+                            <i class="bi bi-cart"></i>
+                        </button>
+                        <a href="{% url 'shop:product_detail' product.id %}" class="btn btn-outline-dark" title="Details">
+                            <i class="bi bi-info-circle"></i>
+                        </a>
+                    </form>
+                    <!-- ✅ Ende der Anpassung -->
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">Keine Produkte in dieser Kategorie gefunden.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

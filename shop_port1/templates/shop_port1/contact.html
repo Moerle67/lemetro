@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Kontakt</h1>
+    <p class="text-center">Haben Sie Fragen oder Anregungen? Schreiben Sie uns eine Nachricht!</p>
+
+    <form class="mx-auto" style="max-width: 600px;" onsubmit="openMailClient(); return false;">
+        <div class="mb-3">
+            <label for="name" class="form-label">Ihr Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Max Mustermann" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Ihre E-Mail-Adresse</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="beispiel@email.com" required>
+        </div>
+        <div class="mb-3">
+            <label for="message" class="form-label">Ihre Nachricht</label>
+            <textarea class="form-control" id="message" name="message" rows="5" placeholder="Ihre Nachricht hier eingeben..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-outline-dark w-100">Nachricht senden</button>
+    </form>
+</div>
+</div>
+
+<div style="height: 0.5vh; visibility: hidden;"></div>
+
+<script>
+function openMailClient() {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    // Mailto-Link generieren
+    const mailto = `mailto:info@meinshop.de?subject=Nachricht von ${encodeURIComponent(name)}&body=Name: ${encodeURIComponent(name)}%0AEmail: ${encodeURIComponent(email)}%0A%0ANachricht:%0A${encodeURIComponent(message)}`;
+    
+    // Mail-Fenster öffnen
+    window.location.href = mailto;
+}
+</script>
+{% endblock %}

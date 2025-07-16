@@ -1,0 +1,92 @@
+{% extends 'shop_port1/base.html' %}
+{% block title %}Warenkorb{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4 text-center">🛒 Dein Warenkorb</h1>
+
+    {% if cart_items %}
+        <div class="table-responsive shadow rounded">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Artikel</th>
+                        <th scope="col" class="text-center">Menge</th>
+                        <th scope="col" class="text-end">Preis</th>
+                        <th scope="col" class="text-center">Aktion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr id="cart-item-{{ item.article.id }}">
+                        <td>
+                            <strong>{{ item.article.designation }}</strong><br>
+                            <small class="text-muted">#{{ item.article.id }}</small>
+                        </td>
+                        <td class="text-center" id="quantity-{{ item.article.id }}">{{ item.quantity }}</td>
+                        <td class="text-end" id="price-{{ item.article.id }}">{{ item.get_total_price }} €</td>
+                        <td class="text-center">
+                            <button class="btn btn-outline-danger btn-sm remove-from-cart" data-article-id="{{ item.article.id|default:'-1' }}">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <h4 class="mb-0">Gesamt: <span id="total-price">{{ total_price }} €</span></h4>
+            <a href="{% url 'shop:checkout' %}" class="btn btn-dark btn-lg">
+                <i class="bi bi-credit-card"></i> Zur Kasse
+            </a>
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            Dein Warenkorb ist aktuell leer.
+        </div>
+    {% endif %}
+</div>
+
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+<script>
+    $(document).ready(function() {
+        function getCSRFToken() {
+            return $("input[name='csrfmiddlewaretoken']").val();
+        }
+
+        $(".remove-from-cart").click(function(event) {
+            event.preventDefault();
+            let button = $(this);
+            let articleId = button.data("article-id");
+
+            $.ajax({
+                type: "POST",
+                url: `/cart/remove/${articleId}/`,
+                data: {
+                    csrfmiddlewaretoken: getCSRFToken()
+                },
+                success: function(response) {
+                    if (response.total_items === 0) {
+                        location.reload();
+                    } else {
+                        if (response.new_quantity > 0) {
+                            $("#quantity-" + articleId).text(response.new_quantity);
+                            $("#price-" + articleId).text(response.new_price + " €");
+                        } else {
+                            $("#cart-item-" + articleId).remove();
+                        }
+                        $("#total-price").text(response.total_price + " €");
+                        $("#cart-count").text(response.total_items);
+                    }
+                },
+                error: function() {
+                    alert("Fehler beim Entfernen des Artikels!");
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

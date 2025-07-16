@@ -1,0 +1,25 @@
+{% load static %}
+{% if cart_items %}
+    {% for item in cart_items %}
+        <li class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-2">
+            {% if item.article.image %}
+                <img src="{{ item.article.image.url }}" alt="{{ item.article.designation }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+            {% else %}
+                <img src="{% static 'default-product.jpg' %}" alt="Standardbild" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+            {% endif %}
+            <div class="flex-grow-1 ms-2">
+                <strong>{{ item.article.designation }}</strong>
+                <p class="mb-0">Menge: {{ item.quantity }} | {{ item.get_total_price }} €</p>
+            </div>
+            <button class="btn btn-sm btn-danger remove-from-cart" data-article-id="{{ item.article.id }}">
+                <i class="bi bi-trash"></i>
+            </button>
+        </li>
+    {% endfor %}
+    <li class="text-end mt-2"><strong>Gesamt: {{ total_price }} €</strong></li>
+    <li class="text-center mt-2">
+        <a href="{% url 'shop:cart' %}" class="btn btn-outline-dark">Zum Warenkorb</a>
+    </li>
+{% else %}
+    <li class="text-center"><em>Dein Warenkorb ist leer</em></li>
+{% endif %}

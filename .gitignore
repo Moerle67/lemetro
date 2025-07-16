@@ -1,0 +1,6 @@
+db.sqlite3
+
+shop_port1/__pycache__/
+shop_port/__pycache__/
+static/
+media/
